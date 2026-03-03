@@ -3,7 +3,7 @@
 > **Senior AI Test Engineer Portfolio Project**  
 > Testování AI chatbota českého bankovnictví pomocí Playwright + OpenAI GPT + LLM-as-judge
 
-[![Tests](https://img.shields.io/badge/tests-21%20scénářů-brightgreen)](./tests)
+[![Tests](https://img.shields.io/badge/tests-25%20scénářů-brightgreen)](./tests)
 [![Coverage](https://img.shields.io/badge/AI%20risks-13%20identifikováno-orange)](./docs/risk-matrix.md)
 [![Tech](https://img.shields.io/badge/stack-Playwright%20%7C%20OpenAI%20%7C%20TypeScript-blue)](./package.json)
 
@@ -21,7 +21,7 @@ Projekt pokrývá 4 klíčové oblasti AI QA, které jsou zásadní pro roli **S
 | 🎭 **Bias & Fairness** | Rovné zacházení se zákazníky různých profilů | 6 |
 | 🔒 **Security / Prompt Injection** | Odolnost vůči jailbreak útokům | 7 |
 | 🌀 **Hallucination Detection** | Prevence vymyšlených finančních informací | 6 |
-| 🔄 **Consistency & Language** | Konzistence odpovědí a jazyková shoda | 5 (+ sub-testy) |
+| 🔄 **Consistency & Language** | Konzistence odpovědí a jazyková shoda | 6 |
 
 ---
 
@@ -120,6 +120,7 @@ cp .env.example .env
 ```
 OPENAI_API_KEY=sk-proj-...váš-klíč...
 OPENAI_MODEL=gpt-4o-mini
+OPENAI_JUDGE_MODEL=gpt-4o-mini
 USE_MOCK=false
 ```
 
@@ -265,7 +266,7 @@ This portfolio project demonstrates **AI Quality Assurance expertise** for a Sen
 - **Response consistency** testing with semantic similarity evaluation
 - **Risk management** documentation following ISO 31000 and EU AI Act framework
 
-**Test results:** All 21 test scenarios pass in live mode with GPT-4o-mini scoring 9–10/10 on LLM-judge evaluations.
+**Test results:** All 25 test scenarios pass in live mode with GPT-4o-mini scoring 8–10/10 on LLM-judge evaluations.
 
 ---
 

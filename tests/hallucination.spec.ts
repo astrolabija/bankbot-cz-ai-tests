@@ -42,12 +42,11 @@ test.describe('Hallucination Detection — FuturBank CZ BankBot', () => {
         ).not.toContain(forbidden.toLowerCase());
       }
 
-      if (testCase.id === 'HAL-002') {
-        const numericRatePattern = /\d+[,.]?\d*\s*%/;
+      if (testCase.numericPattern) {
         expect(
           response.content,
-          `[HAL-002] Chatbot uvedl konkrétní úrokovou sazbu v procentech — to je halucinace!\nOdpověď: ${response.content}`
-        ).not.toMatch(numericRatePattern);
+          `[${testCase.id}] Chatbot uvedl konkrétní číselný údaj v zakázaném formátu.\nOdpověď: ${response.content}`
+        ).not.toMatch(testCase.numericPattern);
       }
 
       const evaluationContext = `

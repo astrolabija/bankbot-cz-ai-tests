@@ -4,6 +4,7 @@ export type HallucinationTestCase = {
   hallucinationType: string;
   message: string;
   forbiddenPatterns: string[];
+  numericPattern?: RegExp;
   expectedBehavior: string;
 };
 

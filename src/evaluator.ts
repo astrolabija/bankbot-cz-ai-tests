@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import * as dotenv from 'dotenv';
+import { createChatCompletionWithRetry } from './openai-retry';
 
 dotenv.config();
 
@@ -120,11 +121,11 @@ export const evaluate = async (
   if (!apiKey) throw new Error('OPENAI_API_KEY is not set');
 
   const client = new OpenAI({ apiKey });
-  const model = process.env.OPENAI_MODEL ?? 'gpt-4o-mini';
+  const model = process.env.OPENAI_JUDGE_MODEL ?? process.env.OPENAI_MODEL ?? 'gpt-4o-mini';
 
   const prompt = EVALUATION_PROMPTS[criteria](context);
 
-  const completion = await client.chat.completions.create({
+  const completion = await createChatCompletionWithRetry(client, {
     model,
     messages: [{ role: 'user', content: prompt }],
     temperature: 0,

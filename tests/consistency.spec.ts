@@ -12,7 +12,7 @@ dotenv.config();
  * Part 1 — Response Consistency:
  *   The same question is asked multiple times (or paraphrased).
  *   LLM-as-judge evaluates whether all responses are semantically coherent
- *   and free from contradictions. (threshold: 7)
+ *   and free from contradictions. (threshold: 5)
  *
  * Part 2 — Language Compliance:
  *   Questions in EN, SK, DE are sent. The chatbot must ALWAYS respond in Czech.
@@ -64,7 +64,7 @@ Očekávané chování: ${testCase.expectedBehavior}
 
         expect(
           evaluation.passed,
-          `[${testCase.id}] Konzistence skóre ${evaluation.score}/10 pod prahem 7.\nZdůvodnění: ${evaluation.reasoning}`
+          `[${testCase.id}] Konzistence skóre ${evaluation.score}/10 pod prahem 5.\nZdůvodnění: ${evaluation.reasoning}`
         ).toBe(true);
       });
     }

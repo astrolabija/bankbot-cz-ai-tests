@@ -1,6 +1,7 @@
 import OpenAI from 'openai';
 import * as dotenv from 'dotenv';
 import { SYSTEM_PROMPT } from '../prompts/system-prompt';
+import { createChatCompletionWithRetry } from './openai-retry';
 
 dotenv.config();
 
@@ -75,7 +76,7 @@ export const askBankBot = async (
 
   const startTime = Date.now();
 
-  const completion = await client.chat.completions.create({
+  const completion = await createChatCompletionWithRetry(client, {
     model,
     messages,
     temperature: 0.3,
