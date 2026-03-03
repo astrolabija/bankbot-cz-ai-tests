@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 import { askBankBot } from '../src/chatbot-client';
 import { evaluate } from '../src/evaluator';
 import { CONSISTENCY_TEST_CASES, LANGUAGE_TEST_CASES } from '../prompts/consistency-prompts';
+import { writeEvidence } from '../src/evidence-logger';
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ dotenv.config();
 test.describe('Consistency & Language Compliance — FuturBank CZ BankBot', () => {
   test.describe('Konzistence odpovědí', () => {
     for (const testCase of CONSISTENCY_TEST_CASES) {
-      test(`[${testCase.id}] ${testCase.description}`, async () => {
+      test(`[${testCase.id}] ${testCase.description}`, async ({}, testInfo) => {
         console.log(`\n🔄 Test: ${testCase.id} — ${testCase.consistencyType}`);
         console.log(`📝 Počet dotazů: ${testCase.messages.length}`);
 
@@ -62,6 +63,20 @@ Očekávané chování: ${testCase.expectedBehavior}
         console.log(`   Výsledek: ${evaluation.passed ? '✅ PASS' : '❌ FAIL'}`);
         console.log(`   Zdůvodnění: ${evaluation.reasoning}`);
 
+        await writeEvidence(testInfo, {
+          suite: 'consistency',
+          testCaseId: testCase.id,
+          request: testCase.messages.join(' | '),
+          response: collectedResponses.join(' | '),
+          model: 'llm-judge',
+          durationMs: 0,
+          evaluationScore: evaluation.score,
+          evaluationThreshold: 5,
+          evaluationReasoning: evaluation.reasoning,
+          passed: evaluation.passed,
+          notes: testCase.consistencyType,
+        });
+
         expect(
           evaluation.passed,
           `[${testCase.id}] Konzistence skóre ${evaluation.score}/10 pod prahem 5.\nZdůvodnění: ${evaluation.reasoning}`
@@ -72,7 +87,7 @@ Očekávané chování: ${testCase.expectedBehavior}
 
   test.describe('Jazyková shoda', () => {
     for (const testCase of LANGUAGE_TEST_CASES) {
-      test(`[${testCase.id}] ${testCase.description}`, async () => {
+      test(`[${testCase.id}] ${testCase.description}`, async ({}, testInfo) => {
         console.log(`\n🌍 Test: ${testCase.id}`);
         console.log(`🗣️  Jazyk dotazu: ${testCase.inputLanguage}`);
         console.log(`💬 Dotaz: ${testCase.message}`);
@@ -122,6 +137,20 @@ Očekávané chování: ${testCase.expectedBehavior}
         console.log(`   Výsledek: ${evaluation.passed ? '✅ PASS' : '❌ FAIL'}`);
         console.log(`   Zdůvodnění: ${evaluation.reasoning}`);
 
+        await writeEvidence(testInfo, {
+          suite: 'language',
+          testCaseId: testCase.id,
+          request: testCase.message,
+          response: response.content,
+          model: response.model,
+          durationMs: response.durationMs,
+          evaluationScore: evaluation.score,
+          evaluationThreshold: 7,
+          evaluationReasoning: evaluation.reasoning,
+          passed: evaluation.passed,
+          notes: `Input language: ${testCase.inputLanguage}`,
+        });
+
         expect(
           evaluation.passed,
           `[${testCase.id}] Jazyková shoda skóre ${evaluation.score}/10 pod prahem 7.\n${evaluation.reasoning}`
@@ -129,7 +158,7 @@ Očekávané chování: ${testCase.expectedBehavior}
       });
     }
 
-    test('[LANG-MIXED] Smíšený jazyk v jednom dotazu — odpověď musí být česky', async () => {
+    test('[LANG-MIXED] Smíšený jazyk v jednom dotazu — odpověď musí být česky', async ({}, testInfo) => {
       const mixedMessage =
         'Hello, ich möchte ein Konto, chci otevřít účet. What do I need?';
 
@@ -152,6 +181,20 @@ Požadavek: Chatbot musí odpovědět výhradně česky.
 
       console.log(`   Skóre: ${evaluation.score}/10 — ${evaluation.passed ? '✅ PASS' : '❌ FAIL'}`);
       console.log(`   Zdůvodnění: ${evaluation.reasoning}`);
+
+      await writeEvidence(testInfo, {
+        suite: 'language',
+        testCaseId: 'LANG-MIXED',
+        request: mixedMessage,
+        response: response.content,
+        model: response.model,
+        durationMs: response.durationMs,
+        evaluationScore: evaluation.score,
+        evaluationThreshold: 7,
+        evaluationReasoning: evaluation.reasoning,
+        passed: evaluation.passed,
+        notes: 'Mixed-language input, Czech-only output expected',
+      });
 
       expect(evaluation.passed).toBe(true);
     });

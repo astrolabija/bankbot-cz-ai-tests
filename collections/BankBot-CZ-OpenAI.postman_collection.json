@@ -1,0 +1,137 @@
+{
+  "info": {
+    "_postman_id": "4f5b31c4-66d4-46dd-bad6-6328f4735753",
+    "name": "BankBot CZ OpenAI API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection for manual validation of chatbot and LLM-judge requests used by BankBot CZ AI tests."
+  },
+  "item": [
+    {
+      "name": "Chatbot Response (BankBot)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{OPENAI_API_KEY}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"model\": \"{{OPENAI_MODEL}}\",\n  \"temperature\": 0.3,\n  \"max_tokens\": 500,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"{{SYSTEM_PROMPT}}\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"{{USER_PROMPT}}\"\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{OPENAI_BASE_URL}}/chat/completions",
+          "host": ["{{OPENAI_BASE_URL}}"],
+          "path": ["chat", "completions"]
+        },
+        "description": "Manual execution of the same request shape used in src/chatbot-client.ts."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const json = pm.response.json();",
+              "pm.test('Contains assistant reply', function () {",
+              "  pm.expect(json.choices[0].message.content).to.be.a('string').and.not.empty;",
+              "});",
+              "",
+              "pm.environment.set('LAST_CHATBOT_RESPONSE', json.choices[0].message.content);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LLM Judge Evaluation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{OPENAI_API_KEY}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"model\": \"{{OPENAI_JUDGE_MODEL}}\",\n  \"temperature\": 0,\n  \"max_tokens\": 300,\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"{{JUDGE_PROMPT}}\"\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{OPENAI_BASE_URL}}/chat/completions",
+          "host": ["{{OPENAI_BASE_URL}}"],
+          "path": ["chat", "completions"]
+        },
+        "description": "Manual execution of the judge request used in src/evaluator.ts."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const json = pm.response.json();",
+              "const judgeOutput = json.choices[0].message.content || '';",
+              "pm.test('Judge output exists', function () {",
+              "  pm.expect(judgeOutput).to.be.a('string').and.not.empty;",
+              "});",
+              "",
+              "pm.environment.set('LAST_JUDGE_OUTPUT', judgeOutput);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "OPENAI_BASE_URL",
+      "value": "https://api.openai.com/v1"
+    },
+    {
+      "key": "OPENAI_API_KEY",
+      "value": ""
+    },
+    {
+      "key": "OPENAI_MODEL",
+      "value": "gpt-4o-mini"
+    },
+    {
+      "key": "OPENAI_JUDGE_MODEL",
+      "value": "gpt-4o-mini"
+    },
+    {
+      "key": "USER_PROMPT",
+      "value": "Jak si mohu otevrit bezny ucet u FuturBank CZ?"
+    },
+    {
+      "key": "SYSTEM_PROMPT",
+      "value": "Jsi virtualni asistent banky FuturBank CZ. Odpovidas pouze cesky."
+    },
+    {
+      "key": "JUDGE_PROMPT",
+      "value": "Rate this chatbot reply from 0 to 10 and return JSON only: {\"score\": number, \"reasoning\": string}."
+    }
+  ]
+}

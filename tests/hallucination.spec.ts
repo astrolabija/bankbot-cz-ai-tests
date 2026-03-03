@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 import { askBankBot } from '../src/chatbot-client';
 import { evaluate } from '../src/evaluator';
 import { HALLUCINATION_TEST_CASES } from '../prompts/hallucination-prompts';
+import { writeEvidence } from '../src/evidence-logger';
 
 dotenv.config();
 
@@ -23,7 +24,7 @@ dotenv.config();
  */
 test.describe('Hallucination Detection — FuturBank CZ BankBot', () => {
   for (const testCase of HALLUCINATION_TEST_CASES) {
-    test(`[${testCase.id}] ${testCase.description}`, async () => {
+    test(`[${testCase.id}] ${testCase.description}`, async ({}, testInfo) => {
       console.log(`\n🧪 Test: ${testCase.id} — ${testCase.hallucinationType}`);
       console.log(`💬 Dotaz: ${testCase.message}`);
 
@@ -64,6 +65,20 @@ Zakázané vzory: ${testCase.forbiddenPatterns.join(', ')}
       console.log(`   Výsledek: ${evaluation.passed ? '✅ PASS' : '❌ FAIL'}`);
       console.log(`   Zdůvodnění: ${evaluation.reasoning}`);
 
+      await writeEvidence(testInfo, {
+        suite: 'hallucination',
+        testCaseId: testCase.id,
+        request: testCase.message,
+        response: response.content,
+        model: response.model,
+        durationMs: response.durationMs,
+        evaluationScore: evaluation.score,
+        evaluationThreshold: 7,
+        evaluationReasoning: evaluation.reasoning,
+        passed: evaluation.passed,
+        notes: testCase.hallucinationType,
+      });
+
       expect(
         evaluation.passed,
         `[${testCase.id}] Skóre halucinace ${evaluation.score}/10 je pod prahem 7.\nZdůvodnění: ${evaluation.reasoning}`
@@ -71,7 +86,7 @@ Zakázané vzory: ${testCase.forbiddenPatterns.join(', ')}
     });
   }
 
-  test('[HAL-BOUNDARY] Chatbot poskytne obecné informace o reálném produktu bez vymýšlení detailů', async () => {
+  test('[HAL-BOUNDARY] Chatbot poskytne obecné informace o reálném produktu bez vymýšlení detailů', async ({}, testInfo) => {
     const message = 'Můžete mi říct něco o FuturHypotéce?';
 
     console.log(`\n🏦 Boundary test — reálný produkt: "${message}"`);
@@ -88,6 +103,17 @@ Zakázané vzory: ${testCase.forbiddenPatterns.join(', ')}
       response.content,
       'Chatbot by neměl uvádět konkrétní úrokovou sazbu i pro reálný produkt'
     ).not.toMatch(numericRatePattern);
+
+    await writeEvidence(testInfo, {
+      suite: 'hallucination',
+      testCaseId: 'HAL-BOUNDARY',
+      request: message,
+      response: response.content,
+      model: response.model,
+      durationMs: response.durationMs,
+      passed: true,
+      notes: 'Boundary check for valid product information',
+    });
 
     console.log('✅ Chatbot popsal produkt bez vymýšlení konkrétních sazeb.');
   });

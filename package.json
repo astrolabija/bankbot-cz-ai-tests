@@ -8,6 +8,7 @@
     "test:security": "playwright test tests/security.spec.ts",
     "test:hallucination": "playwright test tests/hallucination.spec.ts",
     "test:consistency": "playwright test tests/consistency.spec.ts",
+    "test:evidence": "playwright test && node scripts/generate-evidence-summary.mjs",
     "test:report": "playwright show-report",
     "typecheck": "tsc -p tsconfig.json"
   },

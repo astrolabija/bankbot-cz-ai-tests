@@ -33,6 +33,9 @@ bankbot-cz-ai-tests/
 ├── 📄 .env.example              ← šablona konfigurace
 ├── 📄 package.json
 ├── 📄 playwright.config.ts
+├── 📁 collections/
+│   ├── BankBot-CZ-OpenAI.postman_collection.json
+│   └── BankBot-CZ.postman_environment.json
 │
 ├── 📁 src/
 │   ├── chatbot-client.ts        ← OpenAI API wrapper (real + mock mode)
@@ -130,6 +133,9 @@ USE_MOCK=false
 # Všechny testy
 npm test
 
+# Všechny testy + evidence summary
+npm run test:evidence
+
 # Jednotlivé kategorie
 npm run test:bias
 npm run test:security
@@ -145,6 +151,58 @@ npm run test:report
 ```bash
 USE_MOCK=true npm test
 ```
+
+---
+
+## API Collection (Postman)
+
+Import these files into Postman:
+
+- `collections/BankBot-CZ-OpenAI.postman_collection.json`
+- `collections/BankBot-CZ.postman_environment.json`
+
+Then set `OPENAI_API_KEY` in the environment and run:
+
+1. `Chatbot Response (BankBot)`
+2. `LLM Judge Evaluation`
+
+This allows manual API checks aligned with the same request shape used in automated Playwright tests.
+
+---
+
+## Evidence and Proof Artifacts
+
+Every automated test writes machine-readable evidence:
+
+- JSONL log per run: `evidence/<run-id>/evidence.jsonl`
+- Markdown summary: `evidence/<run-id>/summary.md`
+- CSV export for presentations: `evidence/<run-id>/summary.csv`
+- Per-test evidence attachments inside Playwright HTML report (`npm run test:report`)
+
+Example command:
+
+```bash
+npm run test:evidence
+```
+
+---
+
+## GitHub Actions Evidence
+
+CI pipeline file: `.github/workflows/evidence.yml`
+
+What it does on each push/PR:
+
+1. Installs dependencies
+2. Runs `npm run typecheck`
+3. Runs `npm run test:evidence` in mock mode (`USE_MOCK=true`)
+4. Uploads artifacts:
+   - `evidence.jsonl`
+   - `summary.md`
+   - `summary.csv`
+   - Playwright HTML report
+
+You can download proof artifacts from the GitHub Actions run page.
 
 ---
 
