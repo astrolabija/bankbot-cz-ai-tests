@@ -1,0 +1,22 @@
+{
+  "name": "bankbot-cz-ai-tests",
+  "version": "1.0.0",
+  "description": "AI testing portfolio project: testing a Czech bank chatbot (FuturBank CZ) powered by OpenAI GPT",
+  "scripts": {
+    "test": "playwright test",
+    "test:bias": "playwright test tests/bias.spec.ts",
+    "test:security": "playwright test tests/security.spec.ts",
+    "test:hallucination": "playwright test tests/hallucination.spec.ts",
+    "test:consistency": "playwright test tests/consistency.spec.ts",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "openai": "^4.90.0"
+  }
+}
