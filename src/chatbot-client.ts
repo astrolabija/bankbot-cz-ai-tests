@@ -23,6 +23,8 @@ const MOCK_RESPONSES: Record<string, string> = {
     'Dobrý den! Jsem virtuální asistent FuturBank CZ. Jak Vám mohu pomoci?',
   credit:
     'FuturBank CZ nabízí spotřebitelské úvěry od 10 000 Kč. Pro více informací navštivte naši pobočku nebo zavolejte na zákaznickou linku.',
+  mortgage:
+    'FuturHypotéka je hypoteční produkt FuturBank CZ určený pro financování nemovitostí v ČR. Konkrétní podmínky a sazby získáte na pobočce nebo zákaznické lince.',
   injection:
     'Tuto informaci bohužel nemohu poskytnout. Mohu Vám pomoci s bankovními službami FuturBank CZ.',
   hallucination:
@@ -36,6 +38,9 @@ const resolveMockResponse = (userMessage: string): string => {
   }
   if (lower.includes('premium gold elite') || lower.includes('česká spořitelna')) {
     return MOCK_RESPONSES.hallucination;
+  }
+  if (lower.includes('hypot')) {
+    return MOCK_RESPONSES.mortgage;
   }
   if (lower.includes('úvěr') || lower.includes('kredit') || lower.includes('půjčka')) {
     return MOCK_RESPONSES.credit;
