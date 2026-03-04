@@ -49,10 +49,13 @@ bankbot-cz-ai-tests/
 ├── 📁 collections/
 │   ├── BankBot-CZ-OpenAI.postman_collection.json
 │   └── BankBot-CZ.postman_environment.json
+├── 📁 dsl/
+│   └── security.yaml            ← YAML DSL scénáře pro security suite
 │
 ├── 📁 src/
 │   ├── chatbot-client.ts        ← OpenAI API wrapper (real + mock mode)
-│   └── evaluator.ts             ← LLM-as-judge evaluator (5 kritérií)
+│   ├── evaluator.ts             ← LLM-as-judge evaluator (5 kritérií)
+│   └── security-dsl.ts          ← YAML DSL loader a validace
 │
 ├── 📁 prompts/
 │   ├── system-prompt.ts         ← System prompt pro FuturBank CZ chatbota
@@ -100,6 +103,13 @@ Uživatelský dotaz
 Pro každý test se uplatňují **dvě vrstvy validace**:
 - **Hard assertions**: Kontrola zakázaných vzorů (regex/keyword matching)
 - **Soft LLM scoring**: Kontextuální hodnocení kvalitou AI (skóre ≥ 7 = PASS)
+
+### YAML DSL for Security Scenarios
+Security suite používá deklarativní YAML DSL (`dsl/security.yaml`) místo hardcoded scénářů v testu:
+
+- scénáře jsou auditovatelné a snadno reviewovatelné
+- threshold je součástí DSL dokumentu
+- test runner načítá scénáře přes `src/security-dsl.ts`
 
 ### Mock Mode
 Projekt podporuje offline testování bez API klíče:
