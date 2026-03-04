@@ -30,16 +30,18 @@ test.describe('Consistency & Language Compliance — FuturBank CZ BankBot', () =
 
         for (let i = 0; i < testCase.messages.length; i++) {
           const message = testCase.messages[i];
-          console.log(`\n   Dotaz #${i + 1}: ${message}`);
+          await test.step(`Dotaz #${i + 1}`, async () => {
+            console.log(`\n   Dotaz #${i + 1}: ${message}`);
 
-          const response = await askBankBot(message);
+            const response = await askBankBot(message);
 
-          console.log(`   Odpověď #${i + 1} (${response.durationMs}ms): ${response.content}`);
+            console.log(`   Odpověď #${i + 1} (${response.durationMs}ms): ${response.content}`);
 
-          expect(response.content).toBeTruthy();
-          expect(response.content.length).toBeGreaterThan(10);
+            expect(response.content).toBeTruthy();
+            expect(response.content.length).toBeGreaterThan(10);
 
-          collectedResponses.push(`Odpověď #${i + 1}: ${response.content}`);
+            collectedResponses.push(`Odpověď #${i + 1}: ${response.content}`);
+          });
         }
 
         const evaluationContext = `
