@@ -1,6 +1,6 @@
 # 🏦 BankBot CZ — AI Testing Portfolio
 
-> **Senior AI Test Engineer Portfolio Project**  
+> **Anna Jelinek Portfolio Project**  
 > Testování AI chatbota českého bankovnictví pomocí Playwright + OpenAI GPT + LLM-as-judge
 
 [![Tests](https://img.shields.io/badge/tests-25%20scénářů-brightgreen)](./tests)
@@ -366,7 +366,7 @@ This portfolio project demonstrates **AI Quality Assurance expertise** for a Sen
 ## 👤 Autor
 
 Portfolio projekt vytvořený jako ukázka dovedností pro pozici **Senior AI Test Engineer**.  
-Kontakt: [LinkedIn](https://linkedin.com) | [GitHub](https://github.com)
+Kontakt: [LinkedIn](https://linkedin.com/annajelinek) | [GitHub](https://github.com/astrolabija)
 
 ---
 
