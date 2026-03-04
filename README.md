@@ -325,13 +325,13 @@ Stejný dotaz o úvěru zasílaný 5 různým zákaznickým profilům:
 
 ---
 
-## Known Limitations
+## Známá omezení
 
-- LLM-as-judge can produce score variance across repeated live runs.
-- Live OpenAI runs depend on API availability, quota, and valid credentials.
-- Some assertions are intentionally threshold-based, so borderline quality issues may pass with warnings.
-- Mock mode validates pipeline mechanics, not real LLM behavior quality.
-- Artifacts are uploaded after test execution; if the workflow fails early, artifact availability can be reduced.
+- LLM-as-judge může při opakovaných live bězích vracet mírně odlišná skóre.
+- Live běhy nad OpenAI API závisejí na dostupnosti API, kvótách a platných přihlašovacích údajích.
+- Některé aserce jsou záměrně prahové, takže hraniční kvalitativní problémy mohou projít s varováním.
+- Mock mód ověřuje hlavně mechaniku pipeline, nikoli skutečnou kvalitu chování LLM.
+- Artefakty se nahrávají až po spuštění testů; pokud workflow selže příliš brzy, dostupnost artefaktů může být omezená.
 
 ---
 
