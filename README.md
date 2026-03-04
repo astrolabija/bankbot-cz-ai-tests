@@ -6,6 +6,19 @@
 [![Tests](https://img.shields.io/badge/tests-25%20scénářů-brightgreen)](./tests)
 [![Coverage](https://img.shields.io/badge/AI%20risks-13%20identifikováno-orange)](./docs/risk-matrix.md)
 [![Tech](https://img.shields.io/badge/stack-Playwright%20%7C%20OpenAI%20%7C%20TypeScript-blue)](./package.json)
+[![Evidence Pipeline](https://github.com/astrolabija/bankbot-cz-ai-tests/actions/workflows/evidence.yml/badge.svg)](https://github.com/astrolabija/bankbot-cz-ai-tests/actions/workflows/evidence.yml)
+
+---
+
+## 📈 Poslední výsledky testů
+
+- [Latest Evidence Pipeline runs](https://github.com/astrolabija/bankbot-cz-ai-tests/actions/workflows/evidence.yml)
+- [Latest workflow runs on main branch](https://github.com/astrolabija/bankbot-cz-ai-tests/actions/workflows/evidence.yml?query=branch%3Amain)
+- V každém successful run otevři **Artifacts** a stáhni:
+  - `summary.md`
+  - `summary.csv`
+  - `evidence.jsonl`
+  - `playwright-report`
 
 ---
 
@@ -55,6 +68,7 @@ bankbot-cz-ai-tests/
 │   └── consistency.spec.ts      ← Konzistence + jazyk testy
 │
 └── 📁 docs/
+    ├── test-strategy.md         ← Test strategy and release gates
     ├── risk-analysis.md         ← Analýza rizik (ISO 31000, EU AI Act)
     └── risk-matrix.md           ← Riziková matice (13 rizik, 4 kategorie)
 ```
@@ -241,6 +255,7 @@ Projekt obsahuje kompletní risk management dokumentaci:
 
 | Dokument | Popis |
 |----------|-------|
+| [🧭 Test Strategy](./docs/test-strategy.md) | Scope, execution modes, release gates, and evidence model |
 | [📋 Analýza rizik](./docs/risk-analysis.md) | 13 rizik klasifikovaných dle ISO 31000, EU AI Act |
 | [📊 Riziková matice](./docs/risk-matrix.md) | Vizuální matice Pravděpodobnost × Dopad s akčním plánem |
 
@@ -307,6 +322,16 @@ Stejný dotaz o úvěru zasílaný 5 různým zákaznickým profilům:
 - `.env` soubor s API klíčem je v `.gitignore` — **nikdy ho necommitujte!**
 - `.env.example` obsahuje pouze placeholder bez reálného klíče
 - Pro CI/CD použijte GitHub Secrets / environment variables
+
+---
+
+## Known Limitations
+
+- LLM-as-judge can produce score variance across repeated live runs.
+- Live OpenAI runs depend on API availability, quota, and valid credentials.
+- Some assertions are intentionally threshold-based, so borderline quality issues may pass with warnings.
+- Mock mode validates pipeline mechanics, not real LLM behavior quality.
+- Artifacts are uploaded after test execution; if the workflow fails early, artifact availability can be reduced.
 
 ---
 
