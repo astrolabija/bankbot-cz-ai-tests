@@ -1,4 +1,5 @@
-Portfolio projekt vytvořený jako ukázka dovedností pro pozici **Senior AI Test Engineer**.  ANNA JELINEK
+Portfolio projekt vytvořený jako ukázka dovedností pro pozici **Senior AI Test Engineer**.  
+**ANNA JELINEK**
 Kontakt: [LinkedIn](https://www.linkedin.com/in/annajelinek)  anna.jelinek@gmail.com
 
 # 🏦 BankBot CZ — AI Testing Portfolio
