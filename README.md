@@ -364,9 +364,8 @@ This portfolio project demonstrates **AI Quality Assurance expertise** for a Sen
 ---
 
 ## 👤 Autor
-
-Portfolio projekt vytvořený jako ukázka dovedností pro pozici **Senior AI Test Engineer**.  
-Kontakt: [LinkedIn](https://linkedin.com/annajelinek) | [GitHub](https://github.com/astrolabija)
+Anna Jelinek
+Kontakt: [LinkedIn](https://www.linkedin.com/in/annajelinek/) | [GitHub](https://github.com/astrolabija)
 
 ---
 
