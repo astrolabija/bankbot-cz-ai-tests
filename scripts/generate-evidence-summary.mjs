@@ -1,6 +1,16 @@
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
+// Prevents CSV formula injection when the file is opened in spreadsheet software.
+const csvCell = (val) => {
+  const s = String(val ?? '');
+  if (/[,"\n\r]/.test(s) || /^[=+\-@\t]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+  return s;
+};
+
+// Escapes pipe characters so they don't break the markdown table structure.
+const mdCell = (val) => String(val ?? '').replace(/\|/g, '\\|').replace(/\n/g, ' ');
+
 const evidenceRoot = path.resolve(process.cwd(), 'evidence');
 
 const run = async () => {
@@ -42,7 +52,7 @@ const run = async () => {
   for (const entry of entries) {
     const score = typeof entry.evaluationScore === 'number' ? entry.evaluationScore : '-';
     lines.push(
-      `| ${entry.timestamp} | ${entry.suite} | ${entry.testCaseId} | ${score} | ${entry.passed ? 'yes' : 'no'} |`
+      `| ${mdCell(entry.timestamp)} | ${mdCell(entry.suite)} | ${mdCell(entry.testCaseId)} | ${score} | ${entry.passed ? 'yes' : 'no'} |`
     );
   }
 
@@ -60,15 +70,15 @@ const run = async () => {
   ].join(',');
   const csvLines = entries.map((entry) =>
     [
-      entry.timestamp,
-      entry.suite,
-      entry.testCaseId,
+      csvCell(entry.timestamp),
+      csvCell(entry.suite),
+      csvCell(entry.testCaseId),
       typeof entry.evaluationScore === 'number' ? entry.evaluationScore : '',
       typeof entry.evaluationThreshold === 'number' ? entry.evaluationThreshold : '',
       entry.passed ? 'yes' : 'no',
-      entry.model ?? '',
+      csvCell(entry.model ?? ''),
       entry.durationMs ?? '',
-      JSON.stringify(entry.notes ?? ''),
+      csvCell(entry.notes ?? ''),
     ].join(',')
   );
   await writeFile(csvPath, `${[csvHeader, ...csvLines].join('\n')}\n`, 'utf8');
